@@ -7,14 +7,14 @@ set(PICOCALC true)
 # PicoMite will need to be shifted by this amount, and all references to
 # positions in flash updated to accomodate. THIS OPTION IS NOT READY YET.
 # details: https://github.com/adwuard/Picocalc_SD_Boot
-#set(SDBOOT true)
+set(SDBOOT true)
 
 # Compile for PICO 1 Board
-#set(COMPILE PICO)
+set(COMPILE PICO)
 
 # Compile for PICO 2 Board
 #set(COMPILE PICORP2350)
-set(COMPILE WEBRP2350)
+#set(COMPILE WEBRP2350)
 
 if (COMPILE STREQUAL "HDMI" OR COMPILE STREQUAL "WEBRP2350" OR COMPILE STREQUAL "HDMIUSB"  OR COMPILE STREQUAL "VGARP2350"  OR COMPILE STREQUAL "VGAUSBRP2350"  OR COMPILE STREQUAL "PICORP2350"  OR COMPILE STREQUAL "PICOUSBRP2350" )
 	set(PICO_PLATFORM rp2350)
