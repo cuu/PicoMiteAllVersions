@@ -179,33 +179,33 @@ target_compile_options(PicoMite PRIVATE -DNDEBUG
 										-Wall)
 # all RP2350 variants
 if (COMPILE STREQUAL "HDMI" OR COMPILE STREQUAL "WEBRP2350" OR COMPILE STREQUAL "HDMIUSB" OR COMPILE STREQUAL "PICORP2350" OR COMPILE STREQUAL "PICOUSBRP2350" OR COMPILE STREQUAL "VGARP2350" OR COMPILE STREQUAL "VGAUSBRP2350")
-target_compile_options(PicoMite PRIVATE -Drp2350
-										-DPICO_FLASH_SPI_CLKDIV=4
-										-DPICO_PIO_USE_GPIO_BASE
-										)
+	target_compile_options(PicoMite PRIVATE -Drp2350
+											-DPICO_FLASH_SPI_CLKDIV=4
+											-DPICO_PIO_USE_GPIO_BASE
+											)
 endif()
 # all PicoMite variants - enable the gui
 if (COMPILE STREQUAL "PICO" OR COMPILE STREQUAL "PICOUSB" OR COMPILE STREQUAL "PICORP2350" OR COMPILE STREQUAL "PICOUSBRP2350")
-target_compile_options(PicoMite PRIVATE -DPICOMITE
-										-DPICO_HEAP_SIZE=0x1000 
-										-DGUICONTROLS
-										-DPICO_CORE0_STACK_SIZE=0x1000
-										)
+	target_compile_options(PicoMite PRIVATE -DPICOMITE
+											-DPICO_HEAP_SIZE=0x1000 
+											-DGUICONTROLS
+											-DPICO_CORE0_STACK_SIZE=0x1000
+											)
 endif()
 # all VGA variants 
 if (COMPILE STREQUAL "VGA" OR COMPILE STREQUAL "VGAUSB" OR COMPILE STREQUAL "VGARP2350" OR COMPILE STREQUAL "VGAUSBRP2350")
-target_compile_options(PicoMite PRIVATE -DPICOMITEVGA
-										-DPICO_HEAP_SIZE=0x2000 
-										-DPICO_CORE0_STACK_SIZE=0x2000
-										)
+	target_compile_options(PicoMite PRIVATE -DPICOMITEVGA
+											-DPICO_HEAP_SIZE=0x2000 
+											-DPICO_CORE0_STACK_SIZE=0x2000
+											)
 endif()
 # HDMI variants
 if (COMPILE STREQUAL "HDMI" OR COMPILE STREQUAL "HDMIUSB")
-target_compile_options(PicoMite PRIVATE -DPICOMITEVGA
-										-DHDMI
-										-DPICO_HEAP_SIZE=0x2000 
-										-DPICO_CORE0_STACK_SIZE=0x2000
-										)
+	target_compile_options(PicoMite PRIVATE -DPICOMITEVGA
+											-DHDMI
+											-DPICO_HEAP_SIZE=0x2000 
+											-DPICO_CORE0_STACK_SIZE=0x2000
+											)
 endif()
 #Web variants need more heap
 if(COMPILE STREQUAL "WEB" OR COMPILE STREQUAL "WEBRP2350")
@@ -280,3 +280,30 @@ endif()
 if(SDBOOT STREQUAL "true" AND (COMPILE STREQUAL "PICO"))
 	pico_set_linker_script(PicoMite ${CMAKE_SOURCE_DIR}/memmap_default_rp2040.ld)
 endif()
+
+set(UF2_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/PicoMite.uf2)
+set(UF2_DEST   ${CMAKE_BINARY_DIR}/PicoMite.uf2)
+
+add_custom_command(
+    OUTPUT ${UF2_DEST}
+    DEPENDS ${UF2_SOURCE}
+    COMMAND ${CMAKE_COMMAND} -E copy ${UF2_SOURCE} ${UF2_DEST}
+    COMMENT "Copying PicoMite.uf2 to top-level build dir"
+)
+
+
+add_custom_target(PREPARE_PicoMite
+ 			COMMENT "Create Linker Script for 'PicoMite'"
+            COMMAND ${Python3_EXECUTABLE}
+                    ${CMAKE_SOURCE_DIR}/applink.py PREPARE
+                    ${CMAKE_BINARY_DIR}
+                    PicoMite)
+
+add_custom_target(BUILT_PicoMite
+        COMMENT "Record Build Details for 'PicoMite'"
+        DEPENDS ${UF2_DEST}
+        COMMAND ${Python3_EXECUTABLE}
+                ${CMAKE_SOURCE_DIR}/applink.py BUILT
+                ${CMAKE_BINARY_DIR}
+                PicoMite)
+

@@ -2835,9 +2835,6 @@ OPTION MODBUFF ENABLE 192 */
 #ifdef PICOCALC
        if(checkstring(p,(unsigned char *) "PICOCALC"))  {
             ResetOptions(false);
-            //Option.CPU_Speed=252000;
-            //Option.modbuffsize=192;
-            //Option.modbuff = true;
             Option.ColourCode = 1;
             Option.SYSTEM_CLK = 14;
             Option.SYSTEM_MOSI = 15;
@@ -2853,7 +2850,7 @@ OPTION MODBUFF ENABLE 192 */
             Option.AUDIO_DCS_PIN = 0;
             Option.AUDIO_DREQ_PIN = 0;
             Option.AUDIO_RESET_PIN = 0;
-            Option.DISPLAY_TYPE = ILI9488;
+            Option.DISPLAY_TYPE = ST7796SP;
             Option.DISPLAY_BL = 0; //stm32 controls the backlight
             Option.DISPLAY_ORIENTATION = PORTRAIT;
             Option.LCD_CD = 19;
@@ -3638,7 +3635,7 @@ tp = checkstring(cmdline, (unsigned char *)"HEARTBEAT");
     if(tp) {
    	    if(CurrentLinePtr) error("Invalid in a program");
         Option.NoScroll = 0;
-        if(!(Option.DISPLAY_TYPE==ST7789B || Option.DISPLAY_TYPE==ILI9488  || Option.DISPLAY_TYPE == ST7796S || Option.DISPLAY_TYPE == ILI9488P || Option.DISPLAY_TYPE==ILI9341 || Option.DISPLAY_TYPE>=VGADISPLAY))Option.NoScroll=1;
+        if(!(Option.DISPLAY_TYPE==ST7789B || Option.DISPLAY_TYPE==ILI9488 || Option.DISPLAY_TYPE == ST7796SP  || Option.DISPLAY_TYPE == ST7796S || Option.DISPLAY_TYPE == ILI9488P || Option.DISPLAY_TYPE==ILI9341 || Option.DISPLAY_TYPE>=VGADISPLAY))Option.NoScroll=1;
         if(!(Option.DISPLAY_ORIENTATION == DISPLAY_LANDSCAPE) && Option.DISPLAY_TYPE==SSDTYPE) error("Landscape only");
         skipspace(tp);
         Option.DefaultFC = WHITE;

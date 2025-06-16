@@ -955,13 +955,13 @@ int printWrappedText(const char *text, int screenWidth, int listcnt, int all) {
 
 void cmd_help(void){
 	getargs(&cmdline,1,(unsigned char *)",");
-	if(!ExistsFile("A:/help.txt"))error("A:/help.txt not found");
+	if(!ExistsFile("B:/help.txt"))error("B:/help.txt not found");
 	if(!argc){
 		MMPrintString("Enter help and the name of the command or function\r\nUse * for multicharacter wildcard or ? for single character wildcard\r\n");
 	} else {
 		int fnbr = FindFreeFileNbr();
 		char *buff=GetTempMemory(STRINGSIZE);
-		BasicFileOpen("A:/help.txt",fnbr, FA_READ);
+		BasicFileOpen("B:/help.txt",fnbr, FA_READ);
 		int ListCnt = CurrentY/(FontTable[gui_font >> 4][1] * (gui_font & 0b1111)) + 2;
 		char *p=(char *)getCstring(argv[0]);
 		bool end=false;
@@ -1619,7 +1619,7 @@ void MIPS16 do_chain(unsigned char *cmdline){
 	SaveContext();
 	ClearVars(0,false);
 	InitHeap(false);
-	if (*filename && !FileLoadProgram(buf, true)) return;
+	if (*buf && !FileLoadProgram(buf, true)) return;
     ClearRuntime(false);
     PrepareProgram(true);
 	RestoreContext(false);
@@ -2119,7 +2119,8 @@ void MIPS16 __not_in_flash_func(cmd_do)(void) {
 	unsigned char *p, *tp, *evalp;
     if(cmdtoken==cmdWHILE)error("Unknown command");
 	// if it is a DO loop find the WHILE token and (if found) get a pointer to its expression
-	while(*cmdline && *cmdline != tokenWHILE) cmdline++;
+	while(*cmdline && *cmdline != tokenWHILE && *cmdline != tokenUNTIL) cmdline++;
+	if(*cmdline == tokenUNTIL)error("Syntax");
 	if(*cmdline == tokenWHILE) {
 			evalp = ++cmdline;
 		}
